@@ -7,6 +7,7 @@ import { history } from '../helpers1/history1';
 export const SIGNIN_SUCCESS = 'SIGNIN_SUCCESS';
 export const SIGNIN_FAILURE = 'SIGNIN_FAILURE';
 export const FILEUPLOAD_SUCCESS = 'FILEUPLOAD_SUCCESS';
+export const RECENTFILE_SUCCESS = 'RECENTFILE_SUCCESS';
 
 const headers = {
     'Accept': 'application/json'
@@ -20,6 +21,18 @@ export function signinsuccess(userdata) {
                     return {
                      type : SIGNIN_SUCCESS,
                      userdata                                // this is same as newItem : newItem in ES6
+                    }                  
+                
+}
+
+export function displayRecentFiles(file) {
+                 console.log("this is in displayRecentFiles" );
+                 console.log("this is printing file " + JSON.stringify(file));
+                 console.log(file[0].author);
+                    
+                    return {
+                     type : RECENTFILE_SUCCESS,
+                     file                                // this is same as newItem : newItem in ES6
                     }                  
                 
 }
@@ -47,10 +60,10 @@ export function handleSubmit(userdata) {
         },
         body: JSON.stringify(userdata)
     })
-//      .then(response => response.status)
-      .then(response => {
-          console.log("this is in respronse " + response.getAllResponseHeaders());
-            if (response.status === 201) { 
+     .then(response => response.status)
+      .then(status => {
+          //console.log("this is in respronse " + response.getAllResponseHeaders());
+            if (status === 201) { 
                 dispatch(signinsuccess(userdata));
                 history.push('/HomePage');
                  
@@ -89,9 +102,9 @@ export function handleUploadFile(filedata) {
 
          
     return fetch(`${api}/user/doUpload`, {
-        credentials : 'include',
+        
         method: 'POST',
-                       
+          credentials : 'include',             
         body: payload 
         
     })
@@ -100,11 +113,50 @@ export function handleUploadFile(filedata) {
             if (status === 201) { 
                 console.log("in status 201");
                 dispatch(updateFileSuccessStatus(filedata));
-                history.push('/Newpage');
+                history.push('/HomePage');
                  
             }
         })
   }
 }
+export function getAllFiles() {
+  //const payload = new FormData();
+  //payload.append('myfile', filedata.fileHandle);
+  console.log("in getALlFiles");
+   
+  return dispatch => {
 
+         
+    return fetch(`${api}/user/getFiles`, {
+        //credentials : 'include',
+        method: 'GET',
+        credentials : 'include'
+        
+        
+    })
+      .then(response => 
+       {    
+            console.log("this is response "+ JSON.stringify(response));
+            console.log(response[0]);
+            if (response.status === 201) { 
+
+              return response.json();
+                //console.log("in status 201");
+                
+                //dispatch(displayRecentFiles(filedata));
+               // history.push('/HomePage');
+                 
+            }
+        })
+      .then(file =>
+      {    
+        console.log("this is not strigified" + file);
+        console.log("this is stringified " + JSON.stringify(file));
+        //console.log("in then of recent files" + file.JSON);
+
+           dispatch(displayRecentFiles(file));
+           history.push('/HomePage');
+      })
+  }
+}
 

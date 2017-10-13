@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 //import {addToOrder} from "../action/index";
 
-//import RecentItemDisplay from "./RecentItemDisplay";
+import RecentItemDisplay from "./RecentItemDisplay";
 //import StarItemDisplay from "./StarItemDisplay";
 import UploadFile from "./UploadFile";
 //import ./App.css;
@@ -16,8 +16,10 @@ class HomePage extends Component {
         console.log(this.props);
         return (
             <div className="container-fluid">
+            <div className="nav">
                 <div className="row">
-                    <div className="col-md-2 sidenav hidden-xs">
+                
+                    <div className="col-md-2 sidenav hidden-xs" style={{'backgroundColor': 'lightblue'}}>
                         <h3 className="text-center">Dropbox</h3>
                         <ul className = "nav nav-pills nav-stacked">
                         <li><a href="/HomePage">Home</a></li>
@@ -26,7 +28,8 @@ class HomePage extends Component {
                         <li><a href="">Files</a></li>
                         </ul>
                     </div>
-                    <div className="col-md-8">
+
+                    <div className="col-md-8" style={{'width': '650px'}}>
 
                        <h2 className="text-center">Home</h2> 
                        <div>
@@ -38,10 +41,14 @@ class HomePage extends Component {
                        </div>
                        <div>
                        <h4> Recent </h4>
-                       <hr/>
+                       <hr />
+
+                       
+                       <RecentItemDisplay />
+                       
                        </div>
                     </div>
-                    <div className = "col-md-2">
+                    <div className = "col-md-2 col-md-offset-3"  style={{'backgroundColor': 'lightblue'}}>
                     <div>
                     <br />
                     <br />
@@ -52,10 +59,13 @@ class HomePage extends Component {
                     </div>
             
                 </div>
+                </div>
             </div>
 
        );
     }
 }
+
+
 export default HomePage;
 

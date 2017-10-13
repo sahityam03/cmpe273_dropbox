@@ -1,53 +1,75 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { Route, withRouter } from 'react-router-dom';
+import {getAllFiles} from "../actions/index";
 
-//import {addToOrder} from "../action/index";
+
 //import "./App.css";
 
 class RecentItemDisplay extends Component {
 
+  componentDidMount(){
+        this.props.getAllFiles();
+    }
+
     render() {
 
-        const {item} = this.props;
-        //console.log(" Props "+ JSON.stringify(this.props));
-        
+        console.log("props "+ JSON.stringify(this.props.fileArr));
+        console.log(" Props "+ JSON.stringify(this.props));
+        var fArr = this.props.fileArr;
+        if(fArr ==null || fArr== 'undefined')
+        {
+          fArr = [];
+        }
 
         return (
-            <div className="row justify-content-md-center">
-                <div className="col-md-8">
+            
+                
                     <div style={{'width':'500px', 'height':'50px'}}>
 
-                   <table style={{ 'width':'500px'}}>
-                    <tr>
+                   
+                  {
+                      fArr.map((file,index) => {
+                                    
+                                    return(
+                                      <table style={{ 'width':'650px'}}>
+                                      <tbody>
+
+                                      <tr style={{'border':'1px solid lightblue', 'width':'650px', 'height':'50px'}}>
+                                      <td style={{'width' : '300px'}}>
+                                      <a href= {file.filepath} download> {file.filename}</a>
+                                      </td>
+                                      </tr>
+                                    </tbody>
+                                    </table>
+                                        
+
+                                    );
+                                                                         
+                                })
+                   }
                     
-                      <td style={{'width':'350px'}}>
-                        ${ item.price}
-                       </td>
-                       <td style={{'width':'50px'}}>
-                        <button
-                                className="btn btn-primary btn-sm"
-                                onClick={() => {
-                                    this.props.addToOrder(item);
-                                }}
-                            >Share</button>
-                       </td>
-                       <td style={{'width':'100px'}}>
-                            //options(upload, share)
-                        </td>
-                        </tr>
-                        </table>
                     </div>
-                </div>
-            </div>
+               
+           
         );
     }
 }
-
+function mapStateToProps(store1) {
+    console.log("map state to props : " + JSON.stringify(store1));
+    console.log("this is store");
+    console.log(store1);
+    console.log("iam in mapstatetoprops");
+    const {files} = store1;
+    console.log("this is reducer2 " + JSON.stringify(files));
+    const fileArr = files.files;
+  return {fileArr};
+}
 function mapDispatchToProps(dispatch) {
+  console.log("Iam in maptoDispatch");
    return {
-       addToOrder : (item) => dispatch(addToOrder(item))
+       getAllFiles : () => dispatch(getAllFiles())
     };
 }
 
-export default connect(null, mapDispatchToProps)(MenuItem);    // Learn 'Currying' in functional programming
+export default connect(mapStateToProps, mapDispatchToProps)(RecentItemDisplay);    // Learn 'Currying' in functional programming
