@@ -4,19 +4,19 @@ var multer = require('multer');
 var bodyParser = require('body-parser');
 var mysql = require('./mysql');
 var fs = require('fs-extra');
-var session = require('client-sessions');
 
+
+var userglobal;
 
 var Storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, './users_records/sahitya');
+        callback(null, './public/users_records/temp');
     },
     filename: function(req, file, callback) {
         callback(null, "_" + file.originalname);
     }
 });
 var upload = multer({storage:Storage});
-
 
 
 /* GET users listing. */
@@ -44,6 +44,7 @@ router.post('/doLogin', function (req, res, next) {
 		{
 			if(results.length > 0){
 				req.session.username = reqUsername;
+				userglobal = req.session.username;
 				console.log("session user in fetch" + req.session.username);
 				console.log("valid Login");
 				res.status(201).json({message: "Login successful"});
@@ -94,7 +95,7 @@ router.post('/doSignUp', function (req, res, next) {
 						
 					}
 					else {
-						fs.mkdirs('./users_records/'+reqUsername , function(err){
+						fs.mkdirs('./public/users_records/'+reqUsername , function(err){
 							  if (err) return console.error(err);
 							  
 							  console.log("success!")
@@ -110,23 +111,15 @@ router.post('/doSignUp', function (req, res, next) {
 		}  
 	},getUser);
    
-
+	
 });
 
 router.get('/getFiles', function (req, res, next) {
     var resArr = [];
-    var getfiles="select * from user_files where author= 'sahitya'";
-    console.log("this is session user " + req.session.username);
+    var getfiles="select * from user_files where author= '"+userglobal+"'";
+    console.log("this is session user " + userglobal);
     
-    /*glob("public/uploads/*.jpeg", function (er, files) {
-
-        var resArr = files.map(function (file) {
-            var imgJSON = {};
-            imgJSON.img = 'uploads/'+file.split('/')[2];
-            imgJSON.cols = 2 ;
-            return imgJSON;
-        });*/
-    mysql.fetchData(function(err,results){
+     mysql.fetchData(function(err,results){
 		if(err){
 			throw err;
 		}
@@ -151,8 +144,8 @@ router.get('/getFiles', function (req, res, next) {
 			}
 			else {    
 				
-				console.log("Invalid Login");
-				res.status(401).json({message: "Invalid Login details"});
+				console.log("no files uploaded yet");
+				res.status(401).json({message: "no files uploaded yet"});
 			}
 		}  
 	},getfiles);
@@ -162,27 +155,22 @@ router.get('/getFiles', function (req, res, next) {
 
 
 router.post('/doUpload', upload.single('myfile'), function (req, res, next) {
-	/*if(req.session.username)
-	{
-		//Set these headers to notify the browser not to maintain any cache for the page being loaded
-		res.header('Cache-Control','no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		res.render("homepage",{username:req.session.username});
-	}*/
-
-
-   var reqFileName = req.file.filename;
-   console.log("this is file name " + reqFileName);
-  console.log("this is session use " + req.session.username);
-    /*var reqFileHandle = req.body.fileHandle;
+	
+	var reqFileName = req.file.filename;
+	console.log("this is file name " + reqFileName);
+	console.log("this is session use " + userglobal);
+    
     var path = process.cwd();
     console.log("this is path" + path);
-    console.log("this is request object" + JSON.stringify(req.body));
-    //var reqUserName = req.body.username;
-    //var reqfilepath = '../users_records/'+reqUserName ;
-    var reqfilepath = 'C:/Users/sahitya/eclipse-workspace/dropbox/users_records/sahitya' ;
+    var originpath='./public/users_records/' + userglobal + '/' + reqFileName ;
+    console.log("original path printing "+ originpath);
+    
+    fs.move('./public/users_records/temp/' + reqFileName , './public/users_records/'+userglobal+'/'+reqFileName);
+    var reqfilepath = "'./users_records/"+userglobal+ "/_"+reqFileName+"'";
+   
     console.log("the file path is "+ reqfilepath);
-    //var selectFile = "select * from user_files where username= '" + reqUserName + "' and filename='" + reqFileName + "'";
-    var selectFile = "select * from user_files where username= 'sahitya' and filename='" + reqFileName + "'";
+    
+    var selectFile = "select * from user_files where author= '"+userglobal+"' and filename='_" + reqFileName + "'";
     console.log("Query is:"+selectFile);
 
     mysql.fetchData(function(err,results){
@@ -193,14 +181,14 @@ router.post('/doUpload', upload.single('myfile'), function (req, res, next) {
 		{
 			if(results.length > 0){
 				console.log("File already exists");
-				
+						
 			}
 			else {    
 				
-					console.log("Inserting files into Database");*/
-						/*var setuserfiles= "Insert into user_files (username, filename, status, starred, filepath) values ('"+
-						reqUserName +"', '"+ reqFileName +"', 'uploaded', false, '"+reqfilepath+"')";*/
-					/*	var setuserfiles= "Insert into user_files (username, filename, status, starred, filepath) values ('sahitya', '"+ reqFileName +"', 'uploaded', false, '"+reqfilepath+"')";
+					console.log("Inserting files into Database");
+						var setuserfiles= "Insert into user_files (author, filename, deleted, starred, filepath) values ('"+
+						userglobal +"', '_"+ reqFileName +"', false, false, "+reqfilepath+")";
+					
 						mysql.fetchData(function(err,results){
 							if(err){
 								
@@ -214,14 +202,11 @@ router.post('/doUpload', upload.single('myfile'), function (req, res, next) {
 							}
 					
 						},setuserfiles);
-					} 
+				} 
 				
-			}
+		}
 		
-	},selectFile);*/
-	console.log(req.body);
-    console.log(req.file);
-    res.status(204).end();
+	}, selectFile);
 
 });
 

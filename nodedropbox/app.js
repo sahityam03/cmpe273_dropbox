@@ -14,10 +14,9 @@ var fs = require('fs-extra');
 
 var corsOptions = {
 		origin: 'http://localhost:3000',
-		credentials: true,
-		headers: ["Access-Control-Allow-Origin","Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type"],
-		optionsSuccessStatus : 200
-}
+		credentials: true
+		
+};
 
 var app = express();
 app.use(session({   
