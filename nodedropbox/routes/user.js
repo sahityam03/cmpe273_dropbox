@@ -4,6 +4,10 @@ var multer = require('multer');
 var bodyParser = require('body-parser');
 var mysql = require('./mysql');
 var fs = require('fs-extra');
+var crypto = require('crypto');
+var CryptoJS = require('crypto-js');
+var AES = require('crypto-js/aes');
+
 
 
 var userglobal;
@@ -35,7 +39,9 @@ router.post('/doLogin', function (req, res, next) {
     var reqUsername = req.body.username;
     var reqPassword = req.body.password;
     console.log("I am in doLogin");
-    var getUser="select * from users where username= '"+ reqUsername +"' and password='" + reqPassword +"'";
+    
+    //var getUser="select * from users where username= '"+ reqUsername +"' and password='" + reqPassword +"'";
+    var getUser="select * from users where username= '"+ reqUsername +"'";
 	console.log("Query is:"+getUser);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -44,11 +50,21 @@ router.post('/doLogin', function (req, res, next) {
 		else 
 		{
 			if(results.length > 0){
+				var me_reqPassword = CryptoJS.AES.decrypt((results[0].password).toString(), 'AP13123' );
+				var de_reqPassword = me_reqPassword.toString(CryptoJS.enc.Utf8);
+				console.log("this is decrypted password "+ de_reqPassword);
+				if(reqPassword == de_reqPassword)
+				{
 				req.session.username = reqUsername;
 				userglobal = req.session.username;
 				console.log("session user in fetch" + req.session.username);
 				console.log("valid Login");
 				res.status(201).json({message: "Login successful"});
+				}
+				else {
+					console.log("Invalid Login");
+					res.status(401).json({message: "Invalid Login details"});
+				}
 			
 			}
 			else {    
@@ -70,6 +86,7 @@ router.post('/doSignUp', function (req, res, next) {
 	var reqEmail = req.body.email;
     var reqUsername = req.body.username;
     var reqPassword = req.body.password;
+    
     console.log("I am in Signing up");
     var getUser="select * from users where username= '"+ reqUsername +"' or email='" +reqEmail+"'";
 	console.log("Query is:"+getUser);
@@ -86,8 +103,11 @@ router.post('/doSignUp', function (req, res, next) {
 			}
 			else { 
 				console.log("connecting to database");
+				console.log("encrypting password using aes");
+				var en_reqPassword = CryptoJS.AES.encrypt(reqPassword, 'AP13123');
+				console.log("this is encrypted password "+ en_reqPassword);
 				var setuserdata= "Insert into users (firstname, lastname, username, password, email) values ('"+
-				reqFirstname +"', '"+ reqLastname +"', '"+ reqUsername +"' , '"+ reqPassword + "' , '"+reqEmail+"')";
+				reqFirstname +"', '"+ reqLastname +"', '"+ reqUsername +"' , '"+ en_reqPassword + "' , '"+reqEmail+"')";
 				mysql.fetchData(function(err,results){
 					if(err){
 						
@@ -190,8 +210,8 @@ router.post('/doUpload', upload.single('myfile'), function (req, res, next) {
 			else {    
 				
 					console.log("Inserting files into Database");
-						var setuserfiles= "Insert into user_files (author, filename, deleted, starred, filepath) values ('"+
-						userglobal +"', '_"+ reqFileName +"', false, false, "+reqfilepath+")";
+						var setuserfiles= "Insert into user_files (author, filename, deleted, starred, filepath, modifiedtime) values ('"+
+						userglobal +"', '_"+ reqFileName +"', false, false, "+reqfilepath+", NOW())";
 					
 						mysql.fetchData(function(err,results){
 							if(err){
