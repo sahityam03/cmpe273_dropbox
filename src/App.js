@@ -11,6 +11,8 @@ import Newpage from "./components/Newpage";
 import HomePage from "./components/HomePage";
 import { history } from './helpers1/history1';
 import SignUpPage from "./components/SignUpPage";
+import EnterAboutYou from "./components/EnterAboutYou";
+import AboutPage from "./components/AboutPage";
 
 // import HomePage from "./components/HomePage";
 
@@ -26,6 +28,9 @@ import SignUpPage from "./components/SignUpPage";
                                 <Route exact path="/HomePage" component={HomePage} />
                                 <Route path="/Newpage" component={Newpage} />
                                 <Route path="/SignUpPage" component={SignUpPage} />
+                                <Route path="/EnterAboutYou" component={EnterAboutYou} />
+                                <Route path="/AboutPage" component={AboutPage} />
+
                         </div>
                      </Router>           
                     

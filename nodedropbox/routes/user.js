@@ -7,6 +7,7 @@ var fs = require('fs-extra');
 
 
 var userglobal;
+var signupuser;
 
 var Storage = multer.diskStorage({
     destination: function(req, file, callback) {
@@ -70,7 +71,7 @@ router.post('/doSignUp', function (req, res, next) {
     var reqUsername = req.body.username;
     var reqPassword = req.body.password;
     console.log("I am in Signing up");
-    var getUser="select * from users where username= '"+ reqUsername +"' and email='" +reqEmail+"'";
+    var getUser="select * from users where username= '"+ reqUsername +"' or email='" +reqEmail+"'";
 	console.log("Query is:"+getUser);
 	mysql.fetchData(function(err,results){
 		if(err){
@@ -96,10 +97,11 @@ router.post('/doSignUp', function (req, res, next) {
 					}
 					else {
 						fs.mkdirs('./public/users_records/'+reqUsername , function(err){
-							  if (err) return console.error(err);
+							  if (err) {return console.error(err);}
 							  
-							  console.log("success!")
+							  console.log("success!");
 							});
+						signupuser = reqUsername;
 						console.log("SQL insertion successful");
 						res.status(201).json({message: "SignUp Successful"});
 					}
@@ -113,6 +115,8 @@ router.post('/doSignUp', function (req, res, next) {
    
 	
 });
+
+
 
 router.get('/getFiles', function (req, res, next) {
     var resArr = [];
@@ -207,6 +211,108 @@ router.post('/doUpload', upload.single('myfile'), function (req, res, next) {
 		}
 		
 	}, selectFile);
+
+});
+
+router.get('/getMe', function (req, res, next) {
+    var resArr = [];
+    var getaboutme="select * from about_details where username= '"+userglobal+"'";
+    console.log("this is session user " + userglobal);
+    
+     mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				//console.log("Results Type: "+(typeof results));
+                console.log("Results Stringify:"+(jsonString));
+				//console.log("Results Stringify:"+(jsonString[0]));
+				//console.log("Results Parse:"+(jsonParse));
+				console.log("retrieving about me details");
+				res.status(201).json(results);
+			
+			}
+			else {    
+				
+				console.log("no data yet");
+				res.status(401).json({message: "no about data yet"});
+			}
+		}  
+	},getaboutme);
+
+        
+    });
+
+router.post('/doAboutEdit',  function (req, res, next) {
+	
+	var reqdescription = req.body.description;
+	var reqphone = req.body.phone;
+	var reqcountry = req.body.country;
+    var reqinterests = req.body.interests;
+    var reqwork = req.body.work;
+    var reqeducation = req.body.education;
+	
+	console.log("this is session use " + userglobal);
+     
+    var selectdetails = "select * from about_details where username='"+userglobal+"'";
+    
+    console.log("Query is: " + selectdetails);
+
+    mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				console.log("detailse already exists");
+				var updateaboutdetails= "update  about_details set description='"+reqdescription+ "', phone="+reqphone+
+				", country='"+reqcountry+"', work='"+reqwork+"', education='"+reqeducation+"', interests='"+reqinterests+"' where username='"+userglobal+"'";
+			
+				mysql.fetchData(function(err,results){
+					if(err){
+						
+						console.log("sql statement failed");
+						throw err;
+						
+					}
+					else {
+						console.log("update about dtails successful in sql");
+						res.status(201).json({message: "update details successful"});
+					}
+			
+				},updateaboutdetails);
+						
+			}
+			else {    
+				
+					console.log("Inserting about detials into Database");
+					var insertaboutdetails= "insert into about_details(username, description, phone, country, work, education, interests) VALUES ('"+userglobal+"','"
+	                  +reqdescription+"',"+reqphone+",'"+reqcountry+"','"+reqwork+"','"+reqeducation+"','"+reqinterests+"')";
+					
+					mysql.fetchData(function(err,results){
+						if(err){
+							
+							console.log("sql statement failed");
+							throw err;
+							
+						}
+						else {
+							console.log("inserting about dtails successful in sql");
+							res.status(201).json({message: "insert details successful"});
+						}
+				
+					},insertaboutdetails);
+						
+				} 
+				
+		}
+		
+	}, selectdetails);
 
 });
 

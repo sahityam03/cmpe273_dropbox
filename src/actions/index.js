@@ -93,6 +93,7 @@ export function handleSignUp(signupdata) {
         })
   }
 }
+
 export function handleUploadFile(filedata) {
   const payload = new FormData();
   payload.append('myfile', filedata.fileHandle);

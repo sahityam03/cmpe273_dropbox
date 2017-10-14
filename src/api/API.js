@@ -4,8 +4,28 @@ const headers = {
     'Accept': 'application/json'
 };
 
-export const doLogin = (payload) =>
-    fetch(`${api}/user/doLogin`, {
+export const getMe = () =>
+    fetch(`${api}/user/getMe`, {
+        credentials: 'include',
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        if(res.status === 201)
+        { 
+        return res.json();
+        }
+    })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+export const doAboutEdit = (payload) =>
+    fetch(`${api}/user/doAboutEdit`, {
+        credentials: 'include',
         method: 'POST',
         headers: {
             ...headers,
@@ -13,7 +33,10 @@ export const doLogin = (payload) =>
         },
         body: JSON.stringify(payload)
     }).then(res => {
+        if(res.status === 201)
+        { 
         return res.status;
+        }
     })
         .catch(error => {
             console.log("This is error");

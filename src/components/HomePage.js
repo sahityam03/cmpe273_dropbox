@@ -27,6 +27,9 @@ class HomePage extends Component {
                         <ul className = "nav nav-pills nav-stacked">
                         <li><a href="">Files</a></li>
                         </ul>
+                        <ul className = "nav nav-pills nav-stacked">
+                        <li><a href="/AboutPage">About</a></li>
+                        </ul>
                     </div>
 
                     <div className="col-md-8" style={{'width': '650px'}}>
