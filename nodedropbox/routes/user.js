@@ -140,7 +140,7 @@ router.post('/doSignUp', function (req, res, next) {
 
 router.get('/getFiles', function (req, res, next) {
     var resArr = [];
-    var getfiles="select * from user_files where author= '"+userglobal+"'";
+    var getfiles="select * from user_files where author= '"+userglobal+"' and deleted = false ";
     console.log("this is session user " + userglobal);
     
      mysql.fetchData(function(err,results){
@@ -173,6 +173,38 @@ router.get('/getFiles', function (req, res, next) {
 			}
 		}  
 	},getfiles);
+
+        
+    });
+
+
+router.get('/getRecentFiles', function (req, res, next) {
+    var resArr = [];
+    var getrecentfiles="select * from user_files where author= '"+userglobal+"' and deleted = false ORDER BY modifiedtime DESC LIMIT 5";
+    console.log("this is session user " + userglobal);
+    
+     mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				
+				console.log("this is recent file");
+				console.log(jsonString);
+				res.status(201).json(results);
+			
+			}
+			else {    
+				
+				console.log("no files uploaded yet");
+				res.status(401).json({message: "no files uploaded yet"});
+			}
+		}  
+	},getrecentfiles);
 
         
     });
@@ -335,5 +367,166 @@ router.post('/doAboutEdit',  function (req, res, next) {
 	}, selectdetails);
 
 });
+
+
+
+router.post('/changeDeleteStatus',  function (req, res, next) {
+	console.log("in deleting file");
+	var reqfileId = req.body.id;
+	console.log("this is fileid "+ reqfileId);
+	var selectspecificfile = "select * from user_files where id='"+reqfileId+"'";
+    
+    console.log("Query is: " + selectspecificfile);
+
+    mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				console.log("file found");
+				var updatedelete= "update  user_files set deleted= true where id='"+reqfileId+"'";
+			
+				mysql.fetchData(function(err,results){
+					if(err){
+						
+						console.log("sql statement failed");
+						throw err;
+						
+					}
+					else {
+						console.log("file deleted");
+						res.status(201).json({message: "file deleted"});
+					}
+			
+				},updatedelete);
+						
+			}
+			else {    
+				
+				console.log("no file found");
+				res.status(401).json({message: "no file found"});
+						
+				} 
+				
+		}
+		
+	}, selectspecificfile);
+
+});
+
+
+router.get('/getDeletedFiles', function (req, res, next) {
+    var resArr = [];
+    var getdeletedfiles="select * from user_files where author= '"+userglobal+"' and deleted = true";
+    console.log("this is session user " + userglobal);
+    
+     mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				
+				console.log("this is recent file");
+				console.log(jsonString);
+				res.status(201).json(results);
+			
+			}
+			else {    
+				
+				console.log("no files uploaded yet");
+				res.status(401).json({message: "no files uploaded yet"});
+			}
+		}  
+	},getdeletedfiles);
+
+        
+    });
+
+router.get('/getStarFiles', function (req, res, next) {
+    var resArr = [];
+    var getstarredfiles="select * from user_files where author= '"+userglobal+"' and starred = true";
+    console.log("this is session user " + userglobal);
+    
+     mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				var jsonString = JSON.stringify(results);
+				var jsonParse = JSON.parse(jsonString);
+				
+				console.log("this is recent file");
+				console.log(jsonString);
+				res.status(201).json(results);
+			
+			}
+			else {    
+				
+				console.log("no files uploaded yet");
+				res.status(401).json({message: "no files uploaded yet"});
+			}
+		}  
+	},getstarredfiles);
+
+        
+    });
+
+
+
+router.post('/changeStars',  function (req, res, next) {
+	console.log("in deleting file");
+	var reqfileId = req.body.id;
+	var reqStatus = req.body.status;
+	console.log("this is fileid "+ reqfileId);
+	var selectstarfile = "select * from user_files where id='"+reqfileId+"'";
+    
+    console.log("Query is: " + selectstarfile);
+
+    mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				console.log("file found");
+				var updatestarred= "update  user_files set starred= "+reqStatus+" where id='"+reqfileId+"'";
+			
+				mysql.fetchData(function(err,results){
+					if(err){
+						
+						console.log("sql statement failed");
+						throw err;
+						
+					}
+					else {
+						console.log("file deleted");
+						res.status(201).json({message: "file deleted"});
+					}
+			
+				},updatestarred);
+						
+			}
+			else {    
+				
+				console.log("no file found");
+				res.status(401).json({message: "no file found"});
+						
+				} 
+				
+		}
+		
+	}, selectstarfile);
+
+});
+
 
 module.exports = router;

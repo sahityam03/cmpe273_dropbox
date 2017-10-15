@@ -64,6 +64,8 @@ handleAboutEdit = () => {
         {
             console.log("this is in api then");
             console.log(JSON.stringify(data));
+            if(data != null && data != 'undefined')
+            { 
             this.setState({
 
                 description : data[0].description,
@@ -73,6 +75,7 @@ handleAboutEdit = () => {
                 education : data[0].education,
                 interests : data[0].interests
             });
+            }
 
             });
          

@@ -57,7 +57,7 @@ class SignUpPage extends Component {
                                         firstname: event.target.value
                                     });
                                 }} 
-                              />
+                              required />
                         </div>
                         <div className="form-group">
                             <input
@@ -71,7 +71,7 @@ class SignUpPage extends Component {
                                         lastname: event.target.value
                                     });
                                 }} 
-                              />
+                              required />
                         </div>
                         <div className="form-group">
                             <input
@@ -85,7 +85,7 @@ class SignUpPage extends Component {
                                         username: event.target.value
                                     });
                                 }} 
-                              />
+                              required />
                         </div>
                         <div className="form-group">
                             <input
@@ -99,7 +99,7 @@ class SignUpPage extends Component {
                                         password: event.target.value
                                     });
                                 }}
-                            />
+                            required />
                         </div>
                         <div className="form-group">
                             <input
@@ -113,7 +113,7 @@ class SignUpPage extends Component {
                                         email: event.target.value
                                     });
                                 }}
-                            />
+                            required />
                         </div>
                         <div className="form-group">
                             <button

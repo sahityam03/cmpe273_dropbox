@@ -26,3 +26,25 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+.star1
+{
+  visibility : hidden;
+  font-size : 20px;
+  cursor:pointer;
+
+}
+
+.star1:before 
+{
+  content : '\2606';
+  position : absolute;
+  visibility : visible;
+}
+
+.star1:checked:before
+{
+  content : '\2605';
+  position : absolute;
+}

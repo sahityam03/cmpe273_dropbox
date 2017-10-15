@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { Route, withRouter } from 'react-router-dom';
 import {handleUploadFile} from "../actions/index";
-import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+
 //import {addToOrder} from "../action/index";
 //import "./App.css";
-const style = {
-  margin: 12,
-};
+
 
 class UploadFile extends Component {
   state = {
@@ -35,18 +33,15 @@ class UploadFile extends Component {
         
 
         return (
-            
+              
                 
-                <div >
-                    <span>
-                      <input type="file" name= "fileUpload"  onChange={this.handleChange}  />
-                      <button
-                                className="btn btn-primary btn-sm"
-                                onClick={() => {
-                                    this.props.handleUploadFile(this.state);
-                                }}
-                            >Upload</button>
-                    </span>
+                <div className="row justify-content-md-center">
+                    <form encType="multipart/formdata"  onSubmit={() => this.props.handleUploadFile(this.state)}>
+                    <div calssName="fileUpload">
+                      <input type="file" name= "fileUpload" className="upload"   onChange={this.handleChange}  />
+                      <input type="submit" readonly className="btn primary-action-menu__button mc-button-primary" value="Upload" />
+                      </div>
+                    </form>
                     
                 </div>
             

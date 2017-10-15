@@ -3,18 +3,17 @@ import {connect} from 'react-redux';
 
 //import {addToOrder} from "../action/index";
 
-import RecentItemDisplay from "./RecentItemDisplay";
-import StarItemDisplay from "./StarItemDisplay";
+//import RecentItemDisplay from "./RecentItemDisplay";
+import AllFiles from "./AllFiles";
 import UploadFile from "./UploadFile";
-import  '../styles/stylessheet.css';
 //import ./App.css;
 
 
-class HomePage extends Component {
+class FilesPage extends Component {
 
     render() {
-      console.log("i am in homepage");
-        console.log(this.props);
+      console.log("i am in Files");
+        
         return (
             <div className="container-fluid">
                 <div className = "row">
@@ -22,49 +21,38 @@ class HomePage extends Component {
                 
                     <div className="col-md-2 sidenav hidden-xs sidebar" style={{'backgroundColor': 'lightblue', 'height': '100vh'}}>
                         <br />
-                        <h3 className="text-center">Dropbox</h3>
+                        <h3 className="text-center">Files</h3>
                         <br />
                         <ul className = "nav nav-list">
                         <li><a href="/HomePage">Home</a></li>
                         </ul>
                         <ul className = "nav nav-list">
-                        <li><a href="/FilesPage">Files</a></li>
+                        <li><a href="/FilesPage">Myfiles</a></li>
                         </ul>
                         <ul className = "nav nav-list">
-                        <li><a href="/AboutPage">About</a></li>
+                        <li><a href="/Deletedfiles">Deleted Files</a></li>
                         </ul>
                     </div>
 
                     <div className="col-md-8" style={{'width': '650px'}}>
-                      <div className="container-fluid">
-                       <h2 className="text-center">Home</h2> 
+
+                       <h3 >Dropbox</h3> 
                        
-                          <h4>Starred</h4>
-                          <hr/>
-                       
+                       <div>
                           
-                        
-                       </div>
-
-                       <div className="container-fluid">
-                          <h4> Recent </h4>
-                          <hr />
 
                        
-                          <RecentItemDisplay />
+                          <AllFiles />
                        
                        </div>
                     </div>
-                    <div className = "col-md-2  "  style={{'backgroundColor': 'lightblue', 'height': '100vh'}}>
+                    <div className = "col-md-2 col-md-offset-3"  style={{'backgroundColor': 'lightblue', 'height': '100vh'}}>
                         <div>
                         <br />
-                        <br/>
+                        <br />
                         <br />
                         <ul className = "nav nav-list">
                           <li><UploadFile /></li>
-                          </ul>
-                        <ul className = "nav nav-list">
-                          <li><a href="">New Folder</a></li>
                         </ul>
                     
                         </div>
@@ -73,10 +61,9 @@ class HomePage extends Component {
                 </div>
             </div>
 
+
        );
     }
 }
-
-
-export default HomePage;
+export default FilesPage;
 

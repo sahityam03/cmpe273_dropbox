@@ -19,28 +19,7 @@ class AboutPage extends Component {
         interests : ''
     };
 
-	/*getAboutMe = () => {
-  
-        console.log("in getAboutMe");
-        API.getMe()
-        .then(data =>
-        {
-            console.log("this is in api then");
-            console.log(JSON.stringify(data));
-            this.setState({
-
-                description : data[0].description,
-                phone : data[0].phone,
-                country: data[0].country,
-                work : data[0].work,
-                education : data[0].education,
-                interests : data[0].interests
-            });
-
-            });
-        console.log("this is state");
-        console.log(this.state);
-    }*/
+	
 
 	componentDidMount(){
        
@@ -50,6 +29,8 @@ class AboutPage extends Component {
         {
             console.log("this is in api then");
             console.log(JSON.stringify(data));
+            if(data != null && data != 'undefined')
+            { 
             this.setState({
 
                 description : data[0].description,
@@ -59,6 +40,7 @@ class AboutPage extends Component {
                 education : data[0].education,
                 interests : data[0].interests
             });
+            }
 
             });
 
@@ -71,57 +53,67 @@ class AboutPage extends Component {
         return (
 
         		<div className="container-fluid">
-            	<div className="nav">
+            	
                 <div className="row">
                 
-                    <div className="col-md-2 sidenav hidden-xs" style={{'backgroundColor': 'lightblue'}}>
+                    <div className="col-md-2 sidenav hidden-xs sidebar" style={{'backgroundColor': 'lightblue', 'height': '100vh'}}>
                     	<h3 className="text-center">Dropbox</h3>
-                        <ul className = "nav nav-pills nav-stacked">
+                        <ul className = "nav nav-list">
                         	<li><a href="/HomePage">Home</a></li>
                         </ul>
-                        <ul className = "nav nav-pills nav-stacked">
-                        	<li><a href="">Files</a></li>
+                        <ul className = "nav nav-list">
+                        	<li><a href="/FilesPage">Files</a></li>
                         </ul>
-                        <ul className = "nav nav-pills nav-stacked">
+                        <ul className = "nav nav-list">
                         	<li><a href="/AboutPage">About</a></li>
                         </ul>
                     </div>
                     <div className="col-md-10">
+
+                    <br />
+                    <br />
                     
                     <table>
                     <tbody>
                     	<tr>
-                    		<td>This is Me: </td>
+                    		<td><b>This is Me:  </b></td>
                     		<td> {this.state.description}</td>
                     	</tr>
+                        <br />
                     	<tr>
-                    		<td>Phone: </td>
+                    		<td><b>Phone: </b></td>
                     		<td> {this.state.phone} </td>
                     	</tr>
+                        <br/>
                     	<tr>
-                    		<td>Country: </td>
+                    		<td><b>Country: </b></td>
                     		<td> {this.state.country} </td>
                     	</tr>
+                        <br />
                     	<tr>
-                    		<td>Work: </td>
+                    		<td><b>Work: </b></td>
                     		<td> {this.state.work} </td>
                     	</tr>
+                        <br />
                     	<tr>
-                    		<td>Education: </td>
+                    		<td><b>Education: </b></td>
                     		<td> {this.state.education}</td>
                     	</tr>
+                        <br />
                     	<tr>
-                    		<td>Interests:</td>
+                    		<td><b>Interests:</b></td>
                     		<td>{this.state.interests}</td>
                     	</tr>
+                        <br />
                     </tbody>
                     </table>
-                    </div>
                     <div >
                         <a href='/EnterAboutYou' class="btn btn-info" role="button">Edit</a>
                     </div>
+                    </div>
+                    
              </div>
-             </div>
+             
              </div>
 
 

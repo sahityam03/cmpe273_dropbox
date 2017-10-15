@@ -55,7 +55,7 @@ class SignInPage extends Component {
                                         username: event.target.value
                                     });
                                 }} 
-                              />
+                              required />
                         </div>
                         <div className="form-group">
                             <input
@@ -69,7 +69,7 @@ class SignInPage extends Component {
                                         password: event.target.value
                                     });
                                 }}
-                            />
+                            required />
                         </div>
                         <div className="form-group">
                             <button

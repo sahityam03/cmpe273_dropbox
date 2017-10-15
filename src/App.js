@@ -13,6 +13,8 @@ import { history } from './helpers1/history1';
 import SignUpPage from "./components/SignUpPage";
 import EnterAboutYou from "./components/EnterAboutYou";
 import AboutPage from "./components/AboutPage";
+import FilesPage from "./components/FilesPage";
+import Deletedfiles from "./components/Deletedfiles";
 
 // import HomePage from "./components/HomePage";
 
@@ -30,6 +32,8 @@ import AboutPage from "./components/AboutPage";
                                 <Route path="/SignUpPage" component={SignUpPage} />
                                 <Route path="/EnterAboutYou" component={EnterAboutYou} />
                                 <Route path="/AboutPage" component={AboutPage} />
+                                <Route path="/FilesPage" component={FilesPage} />
+                                <Route path="/Deletedfiles" component={Deletedfiles} />
 
                         </div>
                      </Router>           
